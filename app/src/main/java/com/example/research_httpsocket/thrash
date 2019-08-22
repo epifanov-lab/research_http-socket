@@ -1,0 +1,134 @@
+---
+
+  private void test_1() {
+    final OkHttpClient client = new OkHttpClient();
+
+    final Request request = new Request.Builder()
+      .url(SERVER_URL)
+      .post(new FormBody.Builder()
+        //.add("message", "Your message")
+        .build())
+      .build();
+
+    System.out.println("REQUEST: " + request);
+
+    doAsync(() -> {
+      try {
+        Response response = client.newCall(request).execute();
+        ResponseBody serverAnswer = response.body();
+        System.out.println("RESPONSE: " + serverAnswer);
+
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    });
+  }
+
+  private void doAsync(Runnable runnable) {
+    new Thread(runnable).start();
+  }
+
+---
+
+executor.apply(new Request.Builder()
+        //.url("https://api.int.rtt.space/api/v1/init").build())
+        .url("https://google.com").build())
+        .subscribe(
+
+          response -> {
+            System.out.println("RESPONSE: " + response);
+            response.close();
+          },
+
+          throwable -> {
+            System.out.println("ERROR: " + throwable);
+          })
+
+          ----
+{
+      try {
+        Response response = new OkHttpClient.Builder().build()
+          .newCall(new Request.Builder()
+            //.url("https://api.int.rtt.space/api/v1/init").build())
+            .url("https://google.com").build())
+          .execute();
+
+        System.out.println("RESPONSE: " + response);
+
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
+
+===
+
+      // https://www.google.com/search?q=polar%20bears
+      HttpUrl url = new HttpUrl.Builder()
+        .scheme("http")
+        .host("www.google.com")
+        .addPathSegment("search")
+        .addQueryParameter("q", "polar bears")
+        .build();
+
+
+  private static Map.Entry<Cookie, Cookie> httpUrlConnectionINIT(Cookie cookie) {
+    return init(request -> {
+      // http url connection request => response
+      return null;
+    }, cookie);
+  }
+
+  private static Map.Entry<Cookie, Cookie> okHttp3INIT(Cookie cookie) {
+    return init(request -> {
+      // ok http 3 client execute
+      return new OkHttpClient.Builder().build().newCall(request).execute();
+    }, cookie);
+  }
+
+  new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+          init(Layer1.create(request -> chain.call()), null);
+          return null;
+        }
+      };
+
+      ============
+
+
+      new Thread(() ->
+          {
+            HttpUrl url = new HttpUrl.Builder()
+              .scheme("http")
+              .host("api.int.rtt.space")
+              .addPathSegment("api")
+              .addPathSegment("v1")
+              .addPathSegment("init")
+              .build();
+
+            asyncHodilka.perform(new Request.Builder()
+              .url(url)
+              .build())
+              .subscribe(
+
+                response -> {
+                  System.out.println("RESPONSE: " + response);
+                  response.close();
+                },
+
+                throwable -> {
+                  System.out.println("ERROR: " + throwable);
+                });
+          }
+
+          ).start();
+
+          ====
+
+
+      URI uri = request.url().uri();
+      CookieStore cookieStore = new CookieManager().getCookieStore();
+      CookieManager cookieManager = new CookieManager(cookieStore, CookiePolicy.ACCEPT_ORIGINAL_SERVER);
+      cookieManager.put(uri, response.headers().toMultimap());
+      List<HttpCookie> httpCookies = cookieStore.get(uri);
+      print(httpCookies);
