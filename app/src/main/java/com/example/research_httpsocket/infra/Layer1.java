@@ -1,4 +1,4 @@
-package com.example.research_httpsocket;
+package com.example.research_httpsocket.infra;
 
 import java.io.IOException;
 import java.util.function.Function;
@@ -7,7 +7,6 @@ import okhttp3.Call;
 import okhttp3.Call.Factory;
 import okhttp3.Callback;
 import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import reactor.core.Disposable;

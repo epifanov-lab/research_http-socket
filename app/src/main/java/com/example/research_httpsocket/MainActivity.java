@@ -4,6 +4,11 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.research_httpsocket.field_changing_research.FieldHolder;
+import com.example.research_httpsocket.infra.AsyncHodilka;
+import com.example.research_httpsocket.infra.Layer1;
+import com.example.research_httpsocket.infra.SyncHodilka;
+
 import org.json.JSONObject;
 
 import java.net.CookieHandler;
@@ -50,6 +55,85 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
+    //test1();
+    test2();
+
+  }
+
+  private void test2() {
+
+    FieldHolder data = new FieldHolder("INITIAL");
+
+    Runnable R1 = () -> System.out.println("R1 fired: " + data.getField());
+    Runnable R2 = () -> System.out.println("R2 fired: " + data.getField());
+    Runnable R3 = () -> System.out.println("R3 fired: " + data.getField());
+    Runnable R4 = () -> System.out.println("R4 fired: " + data.getField());
+
+    data.addOnFieldChangedListener(R1);
+
+    data.setField("duck");
+
+    new Thread(() -> {
+      int i = 0;
+      do {
+        try {
+          data.setField("T1: " + i);
+          i++;
+          Thread.sleep(1000);
+
+          if (i == 4) {
+            data.addOnFieldChangedListener(R2);
+          }
+
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+      } while (i < 9);
+    }).start();
+
+    new Thread(() -> {
+      int i = 0;
+      do {
+        try {
+          data.setField("T2: " + i);
+          i++;
+          Thread.sleep(900);
+
+          if (i == 3) {
+            data.addOnFieldChangedListener(R3);
+            data.removeOnFieldChangedListener(R1);
+          }
+
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+      } while (i < 9);
+    }).start();
+
+    new Thread(() -> {
+      int i = 0;
+      do {
+        try {
+          data.setField("T3: " + i);
+          i++;
+          Thread.sleep(1100);
+
+          if (i == 2) {
+            data.addOnFieldChangedListener(R4);
+          }
+
+        } catch (InterruptedException e) {
+          e.printStackTrace();
+        }
+
+      } while (i < 9);
+    }).start();
+
+  }
+
+  private void test1() {
     CookieJar cookieJar = cookieJar(new CookieManager().getCookieStore());
     OkHttpClient client = new OkHttpClient.Builder()
       .cookieJar(cookieJar)
@@ -78,7 +162,6 @@ public class MainActivity extends AppCompatActivity {
         throwable.printStackTrace();
       }
     }).start();
-
   }
 
   /**
@@ -88,8 +171,6 @@ public class MainActivity extends AppCompatActivity {
    */
   private static void init(Function<Request, Mono<Response>> client, CookieJar cookieJar) throws Throwable {
 
-    // список оригинальных куков для работы с АПИ
-    // что бы не слетала авторизованность
     // cookieJar будет нашим и load или другой метод включит полную блокирову КукиСтораджа
     // loadForRequestAndLock(apiUrl), должен идти самым первым. так как блокирует всем доступ к иниту
 

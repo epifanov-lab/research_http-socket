@@ -1,4 +1,4 @@
-package com.example.research_httpsocket;
+package com.example.research_httpsocket.infra;
 
 
 import java.io.IOException;
